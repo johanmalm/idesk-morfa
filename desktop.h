@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-only
 #pragma once
 #include <QGraphicsView>
+#include "application.h"
 #include "item.h"
 #include "settings.h"
 
@@ -17,9 +18,12 @@ private slots:
     void exit();
 
 private:
+    void initApplications();
     void updateDesktop();
     void createActions();
     void createItemContextMenu();
+
+    QList<QSharedPointer<Application>> m_applications;
     QWidget *m_parent;
     QMenu *m_itemContextMenu;
     QGraphicsScene m_scene;
