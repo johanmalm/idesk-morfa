@@ -10,9 +10,11 @@
 #include "item.h"
 #include "settings.h"
 
-Item::Item(QString name, char *path, QWidget *centralWidget, QMenu *menu) : m_icon(new QIcon(path))
+Item::Item(QString name, char *path, QString exec, QWidget *centralWidget, QMenu *menu)
+    : m_icon(new QIcon(path))
 {
     m_name = name;
+    m_exec = exec;
     m_centralWidget = centralWidget;
     m_menu = menu;
     m_hover = false;

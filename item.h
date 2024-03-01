@@ -8,7 +8,7 @@
 class Item : public QGraphicsItem
 {
 public:
-    Item(QString name, char *path, QWidget *centralWidget, QMenu *menu);
+    Item(QString name, char *path, QString exec, QWidget *centralWidget, QMenu *menu);
     ~Item();
     enum { Type = UserType + PANEL_TYPE_TASK };
     int type() const override { return Type; }
@@ -28,6 +28,7 @@ protected:
 private:
     QWidget *m_centralWidget;
     QString m_name;
+    QString m_exec;
     QScopedPointer<QIcon> m_icon;
     bool m_hover;
     QMenu *m_menu;
@@ -35,6 +36,7 @@ private:
 public:
     // Getters
     QString clientName() const { return m_name; }
+    QString exec() const { return m_exec; }
     bool hover() const { return m_hover; }
 };
 

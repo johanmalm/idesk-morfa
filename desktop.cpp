@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0-only
 #include <QDebug>
+#include <QDirIterator>
 #include <QGuiApplication>
 #include <QTextStream>
 #include <QtWidgets>
 #include <unistd.h>
+#include "application.h"
 #include "desktop.h"
 extern "C" {
 #include "fdicons.h"
@@ -35,11 +37,13 @@ Desktop::Desktop(QWidget *parent) : QGraphicsView(parent)
     // Create icons
     m_fd_icon_database = fd_icon_database_create();
     fd_icon_database_add_default_paths(m_fd_icon_database);
-    QVector<QString> names = { "xterm", "hexchat", "firefox", "foot" };
-    foreach (QString name, names) {
-        struct fd_icon *fd_icon = fd_icon_database_get_icon(m_fd_icon_database, 48,
-                                                            name.toLatin1().data(), "folder", NULL);
-        Item *item = new Item(name, fd_icon->path, m_parent, m_itemContextMenu);
+
+    initApplications();
+    foreach (QSharedPointer<Application> app, m_applications) {
+        struct fd_icon *fd_icon = fd_icon_database_get_icon(
+                m_fd_icon_database, 48, app.data()->icon().toLatin1().data(), "folder", NULL);
+        Item *item = new Item(app.data()->name(), fd_icon->path, app.data()->exec(), m_parent,
+                              m_itemContextMenu);
         m_scene.addItem(item);
         fd_icon_destroy(fd_icon);
     }
@@ -50,6 +54,23 @@ Desktop::Desktop(QWidget *parent) : QGraphicsView(parent)
 Desktop::~Desktop()
 {
     fd_icon_database_destroy(m_fd_icon_database);
+}
+
+void Desktop::initApplications()
+{
+    QDirIterator it(QString(getenv("HOME")) + "/Desktop");
+    while (it.hasNext()) {
+        QString filename = it.next();
+        if (!filename.endsWith(".desktop")) {
+            continue;
+        }
+        QFile f(filename);
+        if (!f.open(QIODevice::ReadOnly)) {
+            qDebug() << "cannot read file" << f.fileName();
+            continue;
+        }
+        m_applications.append(QSharedPointer<Application>(new Application(&f)));
+    }
 }
 
 void Desktop::updateDesktop()
@@ -81,8 +102,8 @@ void Desktop::openApplication()
         if (Item *p = qgraphicsitem_cast<Item *>(item)) {
             if (!p->hover())
                 continue;
-            qDebug() << "exec" << p->clientName();
-            spawn(p->clientName());
+            qDebug() << "exec" << p->clientName() << p->exec();
+            spawn(p->exec());
             break;
         }
     }
