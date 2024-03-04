@@ -20,6 +20,7 @@ protected:
 #ifndef QT_NO_CONTEXTMENU
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
 #endif
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
     void hoverEnterEvent(QGraphicsSceneHoverEvent *) override;

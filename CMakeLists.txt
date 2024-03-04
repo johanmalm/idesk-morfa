@@ -17,6 +17,7 @@ add_executable(idesk-morfa
 	desktop.cpp desktop.h
 	item.cpp item.h
 	application.cpp application.h
+	util.cpp util.h
 	fdicons/include/fdicons.h
 	fdicons/src/database.c fdicons/include/database.h
 	fdicons/src/ini.c fdicons/include/ini.h

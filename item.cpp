@@ -9,6 +9,7 @@
 #include <QStyleOption>
 #include "item.h"
 #include "settings.h"
+#include "util.h"
 
 Item::Item(QString name, char *path, QString exec, QWidget *centralWidget, QMenu *menu)
     : m_icon(new QIcon(path))
@@ -64,6 +65,11 @@ void Item::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
     QFontMetrics metrics(font);
     QString editedText = metrics.elidedText(m_name, Qt::ElideRight, rect.width());
     painter->drawText(rect, Qt::AlignCenter | Qt::AlignBottom, editedText);
+}
+
+void Item::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    spawn(m_exec);
 }
 
 void Item::mousePressEvent(QGraphicsSceneMouseEvent *event)

@@ -11,6 +11,7 @@ extern "C" {
 #include "fdicons.h"
 }
 #include "settings.h"
+#include "util.h"
 
 Desktop::Desktop(QWidget *parent) : QGraphicsView(parent)
 {
@@ -84,15 +85,6 @@ void Desktop::updateDesktop()
             p->setPos(x, y);
             i++;
         }
-    }
-}
-
-void spawn(QString command)
-{
-    pid_t pid = fork();
-    if (!pid) {
-        execl("/bin/sh", "sh", "-c", command.toLatin1().data(), (void *)NULL);
-        exit(1);
     }
 }
 
